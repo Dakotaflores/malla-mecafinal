@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Malla Interactiva - Ingeniería Mecatrónica</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      margin: 2rem;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .area-container {
+      margin-bottom: 2rem;
+    }
+    .area-title {
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #444;
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: flex-start;
+    }
+    .materia {
+      background: #fff;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      padding: 1rem;
+      width: 250px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+      position: relative;
+    }
+    .materia:hover {
+      transform: scale(1.02);
+    }
+    .materia.tachada::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.2) 2px, transparent 2px, transparent 4px);
+      pointer-events: none;
+      border-radius: 8px;
+    }
+    .sigla {
+      font-weight: bold;
+    }
+    .area, .ano {
+      font-size: 0.9em;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Malla Interactiva de Ingeniería Mecatrónica</h1>
+  <div id="malla"></div>
+
+  <script>
+    const materias = [
+      {sigla:"MAT-132",nombre:"Cálculo I",prerequisitos:[],ano:1,area:"Ciencias Básicas",color:"#FFD700"},
+      {sigla:"MAT-123",nombre:"Álgebra Lineal",prerequisitos:[],ano:1,area:"Ciencias Básicas",color:"#FFD700"},
+      {sigla:"SIS-111",nombre:"Intro. a la Programación",prerequisitos:[],ano:1,area:"Sistemas Computacionales",color:"#ADD8E6"},
+      {sigla:"IMT-141",nombre:"Intro. a la Ing. Mecatrónica",prerequisitos:[],ano:1,area:"Formación Genérica",color:"#90EE90"},
+      {sigla:"CAR-109",nombre:"Escritura Académica",prerequisitos:[],ano:1,area:"Formación Genérica",color:"#90EE90"},
+      {sigla:"MAT-133",nombre:"Cálculo II",prerequisitos:["MAT-132"],ano:2,area:"Ciencias Básicas",color:"#FFD700"},
+      {sigla:"MAT-142",nombre:"Probabilidad y Estadística I",prerequisitos:["MAT-132"],ano:2,area:"Ciencias Básicas",color:"#FFD700"},
+      {sigla:"FIS-111",nombre:"Física I y Lab.",prerequisitos:[],ano:2,area:"Ciencias Básicas",color:"#FFD700"},
+      {sigla:"IMT-121",nombre:"Circuitos Electrónicos I",prerequisitos:["MAT-123"],ano:2,area:"Sistemas Embebidos",color:"#FFA07A"},
+      {sigla:"SIS-112",nombre:"Programación I",prerequisitos:["SIS-111"],ano:2,area:"Sistemas Computacionales",color:"#ADD8E6"},
+      {sigla:"MAT-134",nombre:"Cálculo III",prerequisitos:["MAT-133"],ano:3,area:"Ciencias Básicas",color:"#FFD700"},
+      {sigla:"FIS-112",nombre:"Física II y Lab.",prerequisitos:["FIS-111"],ano:3,area:"Ciencias Básicas",color:"#FFD700"},
+      {sigla:"FIS-113",nombre:"Electricidad y Electromagnetismo y Lab.",prerequisitos:["FIS-111"],ano:3,area:"Ciencias Básicas",color:"#FFD700"},
+      {sigla:"IMT-122",nombre:"Circuitos Electrónicos II",prerequisitos:["IMT-121"],ano:3,area:"Sistemas Embebidos",color:"#FFA07A"},
+      {sigla:"IMT-123",nombre:"Circuitos Digitales",prerequisitos:["IMT-121","SIS-112"],ano:3,area:"Sistemas Embebidos",color:"#FFA07A"},
+      {sigla:"FHC-140",nombre:"Formación Humano Cristiana I",prerequisitos:[],ano:3,area:"Formación Genérica",color:"#90EE90"},
+      // (el resto de materias puede continuar aquí...)
+    ];
+
+    const areas = [...new Set(materias.map(m => m.area))];
+    const container = document.getElementById("malla");
+
+    areas.forEach(area => {
+      const areaDiv = document.createElement("div");
+      areaDiv.className = "area-container";
+
+      const title = document.createElement("div");
+      title.className = "area-title";
+      title.textContent = area;
+      areaDiv.appendChild(title);
+
+      const grid = document.createElement("div");
+      grid.className = "grid";
+
+      materias.filter(m => m.area === area).forEach(m => {
+        const card = document.createElement("div");
+        card.className = "materia";
+        card.dataset.sigla = m.sigla;
+        card.style.backgroundColor = m.color;
+
+        card.innerHTML = `<div class="sigla">${m.sigla}: ${m.nombre}</div>
+                          <div class="ano">Año: ${m.ano}</div>`;
+
+        card.addEventListener("click", () => toggleMateria(card, m.sigla));
+
+        grid.appendChild(card);
+      });
+
+      areaDiv.appendChild(grid);
+      container.appendChild(areaDiv);
+    });
+
+    function toggleMateria(card, sigla) {
+      card.classList.toggle("tachada");
+    }
+  </script>
+</body>
+</html>
